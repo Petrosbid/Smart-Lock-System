@@ -1,4 +1,4 @@
-![-2147483648_-211202](https://github.com/Petrosbid/Smart-Lock-System/assets/123873128/2575f8c2-78b4-4620-8be0-d8414852fe1f)# Smart Lock System
+# Smart Lock System
 
 A comprehensive smart lock system using Arduino and ESP8266, featuring a web-based interface for management and logging. This system can be controlled via the Blynk app and supports unlocking through NFC and RFID.
 
@@ -74,7 +74,9 @@ Receive Notifications:
 Get alerts via the Blynk app, email, and SMS for any unauthorized access attempts.
 
 ### Screenshots
-
+![-2147483648_-211202](https://github.com/Petrosbid/Smart-Lock-System/assets/123873128/2575f8c2-78b4-4620-8be0-d8414852fe1f)
+![image_2024-06-22_19-27-10](https://github.com/Petrosbid/Smart-Lock-System/assets/123873128/a5b69f81-c454-42e7-afc5-05cb127f2bff)
+![image_2024-06-22_19-48-55](https://github.com/Petrosbid/Smart-Lock-System/assets/123873128/1eb25ef3-fce6-418d-9a1c-bddeceb86675)
 
 
 ### Contributing
@@ -95,5 +97,3 @@ Copy code
 2. Add paths to actual screenshots in the `Screenshots` section.
 3. Create a `LICENSE` file in your repository root if you haven't already, and link it correctly.
 4. Adjust any other project-specific details as necessary.
-
-This updated `README.md` includes the notification features and provides a comprehensive overview of your project.
