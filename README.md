@@ -1,4 +1,4 @@
-# Smart Lock System
+![-2147483648_-211202](https://github.com/Petrosbid/Smart-Lock-System/assets/123873128/2575f8c2-78b4-4620-8be0-d8414852fe1f)# Smart Lock System
 
 A comprehensive smart lock system using Arduino and ESP8266, featuring a web-based interface for management and logging. This system can be controlled via the Blynk app and supports unlocking through NFC and RFID.
 
@@ -9,6 +9,7 @@ A comprehensive smart lock system using Arduino and ESP8266, featuring a web-bas
 - **Blynk App Integration**: Control the lock remotely via the Blynk app.
 - **NFC and RFID**: Unlock the system using NFC and RFID technology.
 - **Logging**: PHP-based logging of access attempts, including successful and unsuccessful unlock attempts, and activation times.
+- **Notifications**: Receive notifications via the Blynk app, email, and SMS for security alerts during unauthorized access attempts.
 
 ## Project Structure
 
@@ -52,6 +53,10 @@ Configure Blynk:
 Download and install the Blynk app from the App Store or Google Play.
 Create a new project in Blynk and add the necessary widgets for controlling the lock.
 Note the Auth Token provided by Blynk and update the lock_esp8266.ino file with this token.
+Set Up Notifications:
+
+Configure the Blynk app to send notifications.
+Set up email and SMS notifications for security alerts in the Blynk app or your server.
 Usage
 Access the Web Interface:
 Open your web browser and go to http://your-server-address/index.html.
@@ -65,17 +70,20 @@ Use the Blynk app to remotely control the lock.
 Unlock with NFC/RFID:
 Present an authorized NFC or RFID tag to unlock the system.
 
-Screenshots
+Receive Notifications:
+Get alerts via the Blynk app, email, and SMS for any unauthorized access attempts.
+
+### Screenshots
 
 
 
-Contributing
+### Contributing
 Contributions are welcome! Please open an issue or submit a pull request.
 
-License
+### License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-Acknowledgments
+### Acknowledgments
 Inspiration
 References
 markdown
@@ -88,4 +96,4 @@ Copy code
 3. Create a `LICENSE` file in your repository root if you haven't already, and link it correctly.
 4. Adjust any other project-specific details as necessary.
 
-This updated `README.md` includes the new features and usage details, providing a comprehensive overview of your project.
+This updated `README.md` includes the notification features and provides a comprehensive overview of your project.
