@@ -76,7 +76,7 @@ Get alerts via the Blynk app, email, and SMS for any unauthorized access attempt
 ### Screenshots
 ![-2147483648_-211202](https://github.com/Petrosbid/Smart-Lock-System/assets/123873128/2575f8c2-78b4-4620-8be0-d8414852fe1f)
 ![image_2024-06-22_19-27-10](https://github.com/Petrosbid/Smart-Lock-System/assets/123873128/a5b69f81-c454-42e7-afc5-05cb127f2bff)
-![image_2024-06-22_19-48-55](https://github.com/Petrosbid/Smart-Lock-System/assets/123873128/1eb25ef3-fce6-418d-9a1c-bddeceb86675)
+![Screenshot (386)](https://github.com/Petrosbid/Smart-Lock-System/assets/123873128/eccae99a-745c-488c-ae71-6aff7688ddff)
 
 
 ### Contributing
