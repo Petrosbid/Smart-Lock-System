@@ -1,10 +1,24 @@
 <?php
 $logfile = 'log.txt';
+$counterfile = 'counter.txt';
+
+// تابع برای دریافت شمارنده‌ی جاری و افزایش آن
+function get_and_increment_counter() {
+    global $counterfile;
+    if (file_exists($counterfile)) {
+        $counter = (int)file_get_contents($counterfile);
+    } else {
+        $counter = 0;
+    }
+    $counter++;
+    file_put_contents($counterfile, $counter);
+    return $counter;
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['log'])) {
         $log = $_POST['log'];
-        $log_entry = date('Y-m-d H:i:s') . " - " . $log . PHP_EOL;
+        $log_entry = get_and_increment_counter() . " - " . $log . PHP_EOL;
         file_put_contents($logfile, $log_entry, FILE_APPEND);
         echo json_encode(['success' => true, 'message' => 'Log saved']);
     } else {
