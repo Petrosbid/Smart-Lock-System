@@ -13,29 +13,28 @@ bool open_NFC = false;
 bool open_Blynk = false;
 bool open_Lock = false;
 bool try_Blynk = false;
-SoftwareSerial espSerial(2, 3);
 
-byte correct_nfcs[][4] = {
-  { 0x53, 0xC5, 0x76, 0x34 },
-  { 0xF3, 0x3E, 0xFE, 0x0C },
-  { 0x08, 0x75, 0xC6, 0x4E } 
+byte correct_nfcs[][8] = { 
+  { 0x53, 0xC5, 0x76, 0x34, 0x00, 0x00, 0x00, 0x00 },
+  { 0x08, 0x75, 0xC6, 0x4E, 0x00, 0x00, 0x00, 0x00 },
+  { 0x08, 0xFE, 0x84, 0x95, 0x00, 0x00, 0x00, 0x00 },
+  { 0x01, 0x02, 0x03, 0x04, 0x00, 0x00, 0x00, 0x00 }
 };
 
 void setup() {
-  Serial.begin(115200);
-  espSerial.begin(115200);
+  Serial.begin(9600);
   Serial.println("System initialized");
   nfc.begin();
   pinMode(4, OUTPUT);
-  pinMode(5, OUTPUT);
-  digitalWrite(4, LOW); // Relay initially off
-  digitalWrite(5, LOW); // Relay initially off
+  digitalWrite(4, HIGH);
 }
 
 void loop() {
   readNFC();
-  if (espSerial.available()) {
-    String message = espSerial.readStringUntil('\n');
+  if (Serial.available()) {
+    String message = Serial.readStringUntil('\n');
+    message.trim();
+    Serial.println("Received message: '" + message + "'");
     handleSerialMessage(message);
   }
 }
@@ -57,31 +56,22 @@ void readNFC() {
 }
 
 void handleSerialMessage(String message) {
-  if (message.startsWith("LOCK:")) {
-    if (message == "LOCK:ON") {
-      security_lock = true;
-      Send_Log();
-      Serial.println("Security Lock is ON");
-    } else if (message == "LOCK:OFF") {
-      security_lock = false;
-      Send_Log();
-      Serial.println("Security Lock is OFF");
-    }
-  } else if (message.startsWith("DOOR:")) {
-    if (message == "DOOR:OPEN") {
-      if (!security_lock){
-      openlock();
-      open_Blynk = true;
-      Serial.println("Door is OPENED");
-      Send_Log();
-      }
-      else{
-        try_Blynk = true;
-        Serial.println("security mode is on! can't open the door");
-        Send_Log();
-      }
-    }
+  if (message == "LOCK:ON") {
+    security_lock = true;
+    Serial.println("Security Lock is ON");
+    Send_Log();
+  } 
+  else if (message == "LOCK:OFF") {
+    security_lock = false;
+    Serial.println("Security Lock is OFF");
+    Send_Log();
   }
+  else if (message == "DOOR:OPEN") {
+    open_Blynk = true;
+    openlock();
+    Serial.println("Door is OPENED");
+    Send_Log();
+  } 
 }
 
 void checknfc() {
@@ -96,20 +86,18 @@ void checknfc() {
   
   if (found) {
     Serial.println("Correct NFC found.");
-    if(security_lock){
-      espSerial.println("NFC:security_FAILED");
-      Send_Log();
+    open_NFC = true;
+    openlock();
+    if(!security_lock){
+      Serial.println("NFC:OPENED");
+      delay(2000);
     }
-    else{
-      openlock();
-      open_NFC = true;
-      espSerial.println("NFC:OPENED");
-      Send_Log();
-    }
-  } else {
-      Serial.println("Incorrect NFC found.");
-      espSerial.println("NFC:FAILED");
-      Send_Log();
+  } 
+  else{
+    Serial.println("Incorrect NFC found.");
+    Serial.println("NFC:FAILED");
+    delay(2000);
+    Send_Log();
   }
 }
 
@@ -122,19 +110,20 @@ bool checkCardID(byte *id, byte *correctID, byte size) {
 
 void openlock() {
   if (security_lock) {
-    Serial.println("Security lock is on. Can't open the door");
+    Serial.println("NFC:security_FAILED");
+    delay(2000);
+    Send_Log();
   } else {
-    digitalWrite(4, HIGH); 
-    delay(5000); 
     digitalWrite(4, LOW); 
+    delay(5000); 
+    digitalWrite(4, HIGH); 
     open_Lock = true;
+    Send_Log();
   }
-  Send_Log();
 }
 
 void Send_Log() {
   String message = "";
-  unsigned long currentTime = millis(); 
 
   String UID = "";
   if (try_NFC || open_NFC) {
@@ -143,28 +132,27 @@ void Send_Log() {
     }
   }
 
-  if (open_NFC) {
-    message = "open the door with NFC at: " + String(currentTime) + " UID: " + UID;
+  if (open_NFC && !security_lock) {
+    message = "Door opened with NFC. UID: " + UID;
     open_NFC = false;
-    try_NFC = false;
   } else if (try_NFC && !open_NFC && !security_lock) {
-    message = "Try to open the door with wrong NFC at: " + String(currentTime) + " UID: " + UID;
-    try_NFC = false;
-  } else if (try_NFC && !open_NFC && security_lock) {
-    message = "Try to open the door with NFC in security time at: " + String(currentTime) + " UID: " + UID;
-    try_NFC = false;
+    message = "Try to open the door with wrong NFC. UID: " + UID;
+  } else if (try_NFC && security_lock) {
+    message = "Try to open the door with NFC in security time. UID: " + UID;
   } else if (open_Blynk) {
-    message = "door opened with Blynk app at: " + String(currentTime);
+    message = "Door opened with Blynk app.";
     open_Blynk = false;
-  }  else if (security_lock && try_Blynk){
-    message = "Try to open the door with Blynk in security time at: " + String(currentTime);
-    try_Blynk = false;
-    security_lock = false;
+    
+  } else if (security_lock && try_Blynk) {
+    message = "Try to open the door with Blynk in security time.";
   } else if (security_lock) {
-    message = "security mode turn on at: " + String(currentTime);
+    message = "Security mode turn on.";
   } else {
-    message = "security mode turn off at: " + String(currentTime);
+    message = "Security mode turn off.";
   }
-  espSerial.println(message);
+
+  try_NFC = false;
+  try_Blynk = false;
+  
   Serial.println("Log: " + message); 
 }
